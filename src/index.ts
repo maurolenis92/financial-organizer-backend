@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import budgetRoutes from './routes/budget.routes';
+import userRoutes from './routes/user.routes';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -27,6 +29,10 @@ app.get('/', (req: Request, res: Response) => {
 app.get('/health', (req: Request, res: Response) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
+
+// Importar y usar rutas de presupuestos
+app.use('/api', budgetRoutes);
+app.use('/api', userRoutes);
 
 // Iniciar servidor
 app.listen(PORT, () => {

@@ -1,6 +1,18 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Budget, Prisma } from '@prisma/client';
 
 const prisma = new PrismaClient();
+
+// Tipo para Budget con relaciones incluidas
+type BudgetWithRelations = Prisma.BudgetGetPayload<{
+  include: {
+    incomes: true;
+    expenses: {
+      include: {
+        category: true;
+      };
+    };
+  };
+}>;
 
 export class BudgetService {
   
@@ -10,7 +22,7 @@ export class BudgetService {
     startDate: Date;
     endDate: Date;
     currency: string;
-  }) {
+  }): Promise<Budget> {
     return await prisma.budget.create({
       data: {
         userId: data.userId,
@@ -25,7 +37,7 @@ export class BudgetService {
   }
   
   // Listar presupuestos de un usuario
-  async getBudgetsByUser(userId: string) {
+  async getBudgetsByUser(userId: string): Promise<BudgetWithRelations[]> {
     return await prisma.budget.findMany({
       where: { userId },
       include: {
@@ -39,11 +51,11 @@ export class BudgetService {
   }
   
   // Obtener un presupuesto específico
-  async getBudgetById(id: string, userId: string) {
+  async getBudgetById(id: string, userId: string): Promise<BudgetWithRelations | null> {
     return await prisma.budget.findFirst({
       where: { 
         id,
-        userId // Asegurar que pertenece al usuario
+        userId
       },
       include: {
         incomes: true,
@@ -55,32 +67,34 @@ export class BudgetService {
   }
   
   // Actualizar presupuesto
-  async updateBudget(id: string, userId: string, data: {
-    startDate?: Date;
-    endDate?: Date;
-    currency?: string;
-  }) {
+  async updateBudget(
+    id: string, 
+    userId: string, 
+    data: {
+      startDate?: Date;
+      endDate?: Date;
+      currency?: string;
+    }
+  ): Promise<Budget> {
     return await prisma.budget.update({
       where: { 
-        id,
-        userId // Asegurar que pertenece al usuario
+        id
       },
       data
     });
   }
   
   // Eliminar presupuesto
-  async deleteBudget(id: string, userId: string) {
+  async deleteBudget(id: string, userId: string): Promise<Budget> {
     return await prisma.budget.delete({
       where: {
-        id,
-        userId
+        id
       }
     });
   }
   
   // Recalcular totales del presupuesto
-  async recalculateBudget(budgetId: string) {
+  async recalculateBudget(budgetId: string): Promise<Budget> {
     // Obtener todos los ingresos
     const incomes = await prisma.income.findMany({
       where: { budgetId }

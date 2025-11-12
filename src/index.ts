@@ -3,6 +3,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import budgetRoutes from './routes/budget.routes';
 import userRoutes from './routes/user.routes';
+import categoryRoutes from './routes/category.routes';
+import incomeRoutes from './routes/income.routes';
+import expenseRoutes from './routes/expense.routes';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -33,6 +36,9 @@ app.get('/health', (req: Request, res: Response) => {
 // Importar y usar rutas de presupuestos
 app.use('/api', budgetRoutes);
 app.use('/api', userRoutes);
+app.use('/api', categoryRoutes);
+app.use('/api', incomeRoutes);
+app.use('/api', expenseRoutes);
 
 // Iniciar servidor
 app.listen(PORT, () => {

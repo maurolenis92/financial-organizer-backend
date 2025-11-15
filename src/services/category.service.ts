@@ -19,7 +19,7 @@ export class CategoryService {
   }
 
 
-  async updateCategory(userId: string, id: string, data: {
+  async updateCategory(id: string, data: {
     name?: string;
     color?: string;
     icon?: string;

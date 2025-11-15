@@ -69,7 +69,6 @@ export class BudgetService {
   // Actualizar presupuesto
   async updateBudget(
     id: string, 
-    userId: string, 
     data: {
       startDate?: Date;
       endDate?: Date;
@@ -85,7 +84,7 @@ export class BudgetService {
   }
   
   // Eliminar presupuesto
-  async deleteBudget(id: string, userId: string): Promise<Budget> {
+  async deleteBudget(id: string): Promise<Budget> {
     return await prisma.budget.delete({
       where: {
         id

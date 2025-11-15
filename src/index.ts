@@ -6,6 +6,7 @@ import userRoutes from './routes/user.routes';
 import categoryRoutes from './routes/category.routes';
 import incomeRoutes from './routes/income.routes';
 import expenseRoutes from './routes/expense.routes';
+import { errorHandler } from './middleware/error-handler.middleware';  
 
 // Cargar variables de entorno
 dotenv.config();
@@ -39,6 +40,9 @@ app.use('/api', userRoutes);
 app.use('/api', categoryRoutes);
 app.use('/api', incomeRoutes);
 app.use('/api', expenseRoutes);
+
+// Middleware global para manejo de errores
+app.use(errorHandler);
 
 // Iniciar servidor
 app.listen(PORT, () => {

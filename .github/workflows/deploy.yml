@@ -1,0 +1,53 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  deploy:
+    name: Deploy Backend to Production
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "🚀 Starting deployment..."
+
+            # Navigate to project directory
+            cd /home/ubuntu/finansmart-backend
+
+            # Pull latest changes
+            echo "📥 Pulling latest code from GitHub..."
+            git pull origin master
+
+            # Install dependencies
+            echo "📦 Installing dependencies..."
+            npm install
+
+            # Generate Prisma Client
+            echo "🔧 Generating Prisma Client..."
+            npx prisma generate
+
+            # Build TypeScript
+            echo "🔨 Building TypeScript..."
+            npm run build
+
+            # Run migrations
+            echo "🗄️ Running database migrations..."
+            npx prisma migrate deploy
+
+            # Restart PM2
+            echo "♻️ Restarting backend..."
+            pm2 restart finansmart-backend
+
+            # Show status
+            echo "✅ Deployment complete!"
+            pm2 status

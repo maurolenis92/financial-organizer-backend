@@ -19,6 +19,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            set -e
             echo "🚀 Starting deployment..."
 
             # Navigate to project directory

@@ -47,47 +47,20 @@ FinanSmart Backend es una API REST desarrollada con **Node.js + TypeScript + Exp
 financial-organizer-backend/
 ├── src/
 │   ├── controllers/         # Lógica de controladores (manejo de req/res)
-│   │   ├── user.controller.ts
-│   │   ├── budget.controller.ts
-│   │   ├── category.controller.ts
-│   │   ├── income.controller.ts
-│   │   └── expense.controller.ts
 │   │
 │   ├── services/           # Lógica de negocio
-│   │   ├── user.service.ts
-│   │   ├── budget.service.ts
-│   │   ├── category.service.ts
-│   │   ├── income.service.ts
-│   │   └── expense.service.ts
 │   │
 │   ├── routes/             # Definición de rutas
-│   │   ├── user.routes.ts
-│   │   ├── budget.routes.ts
-│   │   ├── category.routes.ts
-│   │   ├── income.routes.ts
-│   │   └── expense.routes.ts
 │   │
 │   ├── schemas/            # Schemas de validación con Zod
-│   │   ├── user.schema.ts
-│   │   ├── budget.schema.ts
-│   │   ├── category.schema.ts
-│   │   └── transaction.schema.ts
 │   │
 │   ├── dtos/              # Data Transfer Objects
-│   │   ├── user.dto.ts
-│   │   ├── budget.dto.ts
-│   │   ├── category.dto.ts
-│   │   └── transaction.dto.ts
 │   │
 │   ├── mappers/           # Transformación de entidades Prisma → DTOs
-│   │   └── entity.mapper.ts
 │   │
 │   ├── middleware/        # Middlewares personalizados
-│   │   ├── error-handler.middleware.ts
-│   │   └── validation.middleware.ts
 │   │
 │   ├── errors/            # Clases de error personalizadas
-│   │   └── custom-errors.ts
 │   │
 │   └── index.ts           # Entry point de la aplicación
 │
@@ -100,176 +73,6 @@ financial-organizer-backend/
 ├── package.json
 ├── tsconfig.json
 └── README.md
-```
-
----
-
-## 📊 Modelo de Datos
-
-### **User (Usuario)**
-
-```typescript
-- id: UUID
-- email: String (único)
-- name: String
-- createdAt: DateTime
-- updatedAt: DateTime
-```
-
-### **Budget (Presupuesto)**
-
-```typescript
-- id: UUID
-- userId: UUID (FK → User)
-- name: String
-- amount: Decimal
-- month: Int (1-12)
-- year: Int
-- createdAt: DateTime
-- updatedAt: DateTime
-```
-
-### **Category (Categoría)**
-
-```typescript
-- id: UUID
-- userId: UUID (FK → User)
-- name: String
-- type: Enum (INCOME | EXPENSE)
-- createdAt: DateTime
-- updatedAt: DateTime
-```
-
-### **Income (Ingreso)**
-
-```typescript
-- id: UUID
-- userId: UUID (FK → User)
-- categoryId: UUID (FK → Category)
-- amount: Decimal
-- description: String (opcional)
-- date: DateTime
-- createdAt: DateTime
-- updatedAt: DateTime
-```
-
-### **Expense (Gasto)**
-
-```typescript
-- id: UUID
-- userId: UUID (FK → User)
-- budgetId: UUID (FK → Budget, opcional)
-- categoryId: UUID (FK → Category)
-- amount: Decimal
-- description: String (opcional)
-- date: DateTime
-- createdAt: DateTime
-- updatedAt: DateTime
-```
-
----
-
-## 🚀 APIs Disponibles
-
-### **Health Check**
-
-```
-GET  /              - Status de la API
-GET  /health        - Health check con verificación de DB
-```
-
-### **Users (Usuarios)**
-
-```
-POST   /api/users           - Crear usuario
-GET    /api/users           - Listar usuarios
-GET    /api/users/:id       - Obtener usuario por ID
-PUT    /api/users/:id       - Actualizar usuario
-DELETE /api/users/:id       - Eliminar usuario
-```
-
-### **Budgets (Presupuestos)**
-
-```
-POST   /api/budgets         - Crear presupuesto
-GET    /api/budgets         - Listar presupuestos
-GET    /api/budgets/:id     - Obtener presupuesto por ID
-PUT    /api/budgets/:id     - Actualizar presupuesto
-DELETE /api/budgets/:id     - Eliminar presupuesto
-```
-
-### **Categories (Categorías)**
-
-```
-POST   /api/categories      - Crear categoría
-GET    /api/categories      - Listar categorías
-GET    /api/categories/:id  - Obtener categoría por ID
-PUT    /api/categories/:id  - Actualizar categoría
-DELETE /api/categories/:id  - Eliminar categoría
-```
-
-### **Incomes (Ingresos)**
-
-```
-POST   /api/incomes         - Registrar ingreso
-GET    /api/incomes         - Listar ingresos
-GET    /api/incomes/:id     - Obtener ingreso por ID
-PUT    /api/incomes/:id     - Actualizar ingreso
-DELETE /api/incomes/:id     - Eliminar ingreso
-```
-
-### **Expenses (Gastos)**
-
-```
-POST   /api/expenses        - Registrar gasto
-GET    /api/expenses        - Listar gastos
-GET    /api/expenses/:id    - Obtener gasto por ID
-PUT    /api/expenses/:id    - Actualizar gasto
-DELETE /api/expenses/:id    - Eliminar gasto
-```
-
----
-
-## 📋 Formato de Requests/Responses
-
-### **Ejemplo: Crear Usuario**
-
-**Request:**
-
-```json
-POST /api/users
-Content-Type: application/json
-
-{
-  "email": "usuario@ejemplo.com",
-  "name": "Juan Pérez"
-}
-```
-
-**Response (200 OK):**
-
-```json
-{
-  "id": "550e8400-e29b-41d4-a716-446655440000",
-  "email": "usuario@ejemplo.com",
-  "name": "Juan Pérez",
-  "createdAt": "2025-11-16T10:30:00Z",
-  "updatedAt": "2025-11-16T10:30:00Z"
-}
-```
-
-**Response (400 Bad Request):**
-
-```json
-{
-  "message": "Validation error",
-  "errors": [
-    {
-      "field": "email",
-      "message": "Invalid email"
-    }
-  ]
-}
 ```
 
 ---
@@ -495,23 +298,6 @@ chore: tareas de mantenimiento
 ## 📄 Licencia
 
 Este proyecto es privado y confidencial.
-
----
-
-## 🚧 Roadmap
-
-- [x] API REST completa (Users, Budgets, Categories, Incomes, Expenses)
-- [x] Validación con Zod
-- [x] Error handling centralizado
-- [x] Health checks
-- [x] Configuración para múltiples entornos
-- [ ] Autenticación con JWT
-- [ ] Tests unitarios y de integración
-- [ ] Documentación con Swagger/OpenAPI
-- [ ] Rate limiting
-- [ ] Logs estructurados
-- [ ] Deploy en AWS EC2
-- [ ] CI/CD con GitHub Actions
 
 ---
 

@@ -1,14 +1,17 @@
 import { Request, Response } from 'express';
 import { UserService } from '../services/user.service';
+import { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { UserMapper } from '../mappers/user.mapper';
 
 const userService = new UserService();
 
 export class UserController {
   
   // POST /api/users
-  async create(req: Request, res: Response): Promise<void> {
+  async create(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
       const { email, name } = req.body;
+      const cognitoId = req.cognitoUser!.sub;
       
       // Validar que email existe
       if (!email) {
@@ -23,7 +26,7 @@ export class UserController {
         return;
       }
       
-      const user = await userService.createUser({ email, name });
+      const user = await userService.createUser({ email, cognitoId, name, });
       
       res.status(201).json(user);
     } catch (error) {
@@ -33,7 +36,7 @@ export class UserController {
   }
   
   // GET /api/users
-  async getAll(req: Request, res: Response): Promise<void> {
+  async getAll(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
       const users = await userService.getAllUsers();
       res.json(users);
@@ -44,9 +47,9 @@ export class UserController {
   }
   
   // GET /api/users/:id
-  async getById(req: Request, res: Response): Promise<void> {
+  async getById(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.user!.id;
       
       const user = await userService.getUserById(id);
       
@@ -54,8 +57,10 @@ export class UserController {
         res.status(404).json({ error: 'Usuario no encontrado' });
         return;
       }
+
+      const userDTO = UserMapper.toDetailDTO(user);
       
-      res.json(user);
+      res.json(userDTO);
     } catch (error) {
       console.error('Error fetching user:', error);
       res.status(500).json({ error: 'Error al obtener usuario' });

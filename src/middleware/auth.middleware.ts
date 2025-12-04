@@ -1,14 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
 import { CognitoJwtVerifier } from 'aws-jwt-verify';
+import { User } from '@prisma/client';
+import { UserService } from '../services/user.service';
 
 // Extend Express Request to include user info
 export interface AuthenticatedRequest extends Request {
-  user?: {
+  cognitoUser?: {
     sub: string;          // Cognito user ID
     email: string;
     name?: string;
     tokenUse: string;
   };
+  user?: User;
 }
 
 // Create JWT verifier for Cognito
@@ -17,6 +20,8 @@ const verifier = CognitoJwtVerifier.create({
   tokenUse: 'id',  // Use 'id' token (contains user attributes)
   clientId: process.env.COGNITO_CLIENT_ID!,
 });
+
+const userService = new UserService();
 
 /**
  * Middleware to authenticate requests using Cognito JWT
@@ -60,14 +65,23 @@ export const authMiddleware = async (
 
     // Verify token with Cognito
     const payload = await verifier.verify(token);
-
-    // Add user info to request
-    req.user = {
+    // Storage cognito user info in request
+    req.cognitoUser = {
       sub: payload.sub,
       email: payload.email as string,
       name: payload.name as string | undefined,
       tokenUse: payload.token_use,
     };
+
+    // Find or create user in RDS
+    const user = await userService.findOrCreateUser({
+      cognitoId: payload.sub,
+      email: payload.email as string,
+      name: payload.name as string | undefined,
+    });
+
+    // Add RDS user to request
+    req.user = user;
 
     next();
   } catch (error) {
@@ -98,7 +112,7 @@ export const optionalAuthMiddleware = async (
       if (token) {
         const payload = await verifier.verify(token);
         
-        req.user = {
+        req.cognitoUser = {
           sub: payload.sub,
           email: payload.email as string,
           name: payload.name as string | undefined,

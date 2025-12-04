@@ -1,3 +1,6 @@
+import { Category } from "@prisma/client";
+import { CategoryDTO } from "./category.dto";
+import { KeyValueDTO } from "./key-value.dto";
 
 
 export interface ExpenseDTO {
@@ -7,3 +10,9 @@ export interface ExpenseDTO {
   categoryId: string;
   status: 'PENDING' | 'PAID';
 }
+
+export interface CreateExpenseDTO extends Pick<ExpenseDTO, 'id' | 'amount' | 'concept'> {
+  category: CategoryDTO;
+  status: KeyValueDTO
+}
+

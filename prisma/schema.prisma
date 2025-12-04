@@ -10,12 +10,13 @@ datasource db {
 
 // MODELO: Usuario
 model User {
-  id         String     @id @default(uuid())
-  email      String     @unique
-  name       String?
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  
+  id        String   @id @default(uuid())
+  cognitoId String   @unique
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relaciones
   budgets    Budget[]
   credits    Credit[]
@@ -24,22 +25,23 @@ model User {
 
 // MODELO: Presupuesto
 model Budget {
-  id             String    @id @default(uuid())
+  id             String   @id @default(uuid())
   userId         String
+  name           String
   startDate      DateTime
   endDate        DateTime
-  currency       String    @default("COP") // COP, USD, EUR, etc.
-  totalIncomes   Float     @default(0)     // Calculado
-  totalExpenses  Float     @default(0)     // Calculado
-  availableMoney Float     @default(0)     // Calculado: totalIncomes - totalExpenses
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  
+  currency       String   @default("COP") // COP, USD, EUR, etc.
+  totalIncomes   Float    @default(0) // Calculado
+  totalExpenses  Float    @default(0) // Calculado
+  availableMoney Float    @default(0) // Calculado: totalIncomes - totalExpenses
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
   // Relaciones
-  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  incomes        Income[]
-  expenses       Expense[]
-  
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  incomes  Income[]
+  expenses Expense[]
+
   @@index([userId])
 }
 
@@ -47,32 +49,32 @@ model Budget {
 model Income {
   id        String   @id @default(uuid())
   budgetId  String
-  concept   String   // "Salario", "Freelance", "Inversión", etc.
+  concept   String // "Salario", "Freelance", "Inversión", etc.
   amount    Float
   date      DateTime @default(now())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
   // Relaciones
-  budget    Budget   @relation(fields: [budgetId], references: [id], onDelete: Cascade)
-  
+  budget Budget @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+
   @@index([budgetId])
 }
 
 // MODELO: Categoría
 model Category {
-  id        String    @id @default(uuid())
+  id        String   @id @default(uuid())
   userId    String
-  name      String    // "Alimentación", "Transporte", "Vivienda", etc.
-  color     String?   // Hex color para UI: "#FF5733"
-  icon      String?   // Nombre del ícono para UI
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  
+  name      String // "Alimentación", "Transporte", "Vivienda", etc.
+  color     String? // Hex color para UI: "#FF5733"
+  icon      String? // Nombre del ícono para UI
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relaciones
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expenses  Expense[]
-  
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expenses Expense[]
+
   @@unique([userId, name]) // Un usuario no puede tener categorías duplicadas
   @@index([userId])
 }
@@ -82,45 +84,45 @@ model Expense {
   id         String        @id @default(uuid())
   budgetId   String
   categoryId String
-  concept    String        // Descripción específica del gasto
+  concept    String // Descripción específica del gasto
   amount     Float
   status     ExpenseStatus @default(PENDING)
   date       DateTime      @default(now())
   createdAt  DateTime      @default(now())
   updatedAt  DateTime      @updatedAt
-  
+
   // Relaciones
-  budget     Budget        @relation(fields: [budgetId], references: [id], onDelete: Cascade)
-  category   Category      @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  
+  budget   Budget   @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
   @@index([budgetId])
   @@index([categoryId])
 }
 
 // MODELO: Crédito
 model Credit {
-  id              String       @id @default(uuid())
-  userId          String
-  name            String       // Nombre del crédito
-  loanAmount      Float        // Monto prestado (B1)
-  years           Float        // Plazo en años (B2)
-  annualRate      Float        // Tasa anual (B3)
-  monthlyRate     Float        // Tasa mensual (B4 - calculado)
-  periods         Int          // Períodos en meses (B5 - calculado)
-  monthlyPayment  Float        // Cuota mensual (B6 - calculado)
-  totalInterest   Float        // Intereses totales (B7 - calculado)
-  totalToPay      Float        // Total a pagar (B8 - calculado)
-  amountPaid      Float        @default(0) // Cuánto lleva pagado
-  remainingBalance Float       // Saldo restante
-  currency        String       @default("COP")
-  startDate       DateTime     @default(now())
-  status          CreditStatus @default(ACTIVE)
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
-  
+  id               String       @id @default(uuid())
+  userId           String
+  name             String // Nombre del crédito
+  loanAmount       Float // Monto prestado (B1)
+  years            Float // Plazo en años (B2)
+  annualRate       Float // Tasa anual (B3)
+  monthlyRate      Float // Tasa mensual (B4 - calculado)
+  periods          Int // Períodos en meses (B5 - calculado)
+  monthlyPayment   Float // Cuota mensual (B6 - calculado)
+  totalInterest    Float // Intereses totales (B7 - calculado)
+  totalToPay       Float // Total a pagar (B8 - calculado)
+  amountPaid       Float        @default(0) // Cuánto lleva pagado
+  remainingBalance Float // Saldo restante
+  currency         String       @default("COP")
+  startDate        DateTime     @default(now())
+  status           CreditStatus @default(ACTIVE)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
   // Relaciones
-  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId])
 }
 

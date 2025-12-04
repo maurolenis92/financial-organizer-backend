@@ -1,13 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
 import { ExpenseService } from '../services/expense.service';
 import { BadRequestError, NotFoundError } from '../errors/app-error';
+import { AuthenticatedRequest } from '../middleware/auth.middleware';
 
 
 const expenseService = new ExpenseService();
 export class ExpenseController {
 
   // POST /api/expenses
-  async create(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async create(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
       const { budgetId, categoryId, concept, amount, status } = req.body;
 
       // Validar datos requeridos
@@ -21,7 +22,7 @@ export class ExpenseController {
   }
 
   // GET /api/expenses/budget/:budgetId
-  async getByBudget(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getByBudget(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
       const { budgetId } = req.params;
 
       const expenses = await expenseService.getAllExpenses({ budgetId });
@@ -30,7 +31,7 @@ export class ExpenseController {
   }
 
   // PUT /api/expenses/:id
-  async update(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async update(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
       const { id } = req.params;
       const { categoryId, concept, amount, status } = req.body;
 
@@ -44,7 +45,7 @@ export class ExpenseController {
   }
 
   // DELETE /api/expenses/:id
-  async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async delete(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
       const { id } = req.params;
 
       const deletedExpense = await expenseService.deleteExpense(id);

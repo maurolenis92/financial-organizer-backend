@@ -9,12 +9,14 @@ import { IncomeDTO } from "./income.dto";
 export interface CreateBudgetDTO {
   startDate: string;
   endDate: string;
+  name: string;
   currency?: string;
 }
 
 export interface UpdateBudgetDTO {
   startDate?: string;
   endDate?: string;
+  name?: string;
   currency?: string;
 }
 
@@ -25,6 +27,7 @@ export interface UpdateBudgetDTO {
 export interface BudgetResponseDTO {
   id: string;
   startDate: string;
+  name: string;
   endDate: string;
   currency: string;
   totalPaidExpenses: number; // Suma de gastos con estado 'PAID'
@@ -39,16 +42,25 @@ export interface BudgetResponseDTO {
   incomes?: IncomeDTO[];       // Lista de ingresos asociados al presupuesto
   categories?: CategoryDTO[]; // Lista de categorías asociadas al presupuesto
 }
-// TODO: PENDINNG 
-// export interface BudgetListItemDTO {
-//   id: string;
-//   startDate: string;
-//   endDate: string;
-//   currency: string;
-//   totalIncomes: number;
-//   totalExpenses: number;
-//   availableMoney: number;
-//   percentageUsed: number;
-//   daysRemaining: number;
-//   // Sin incluir los arrays de incomes/expenses (más liviano para listados)
-// }
+
+export interface BudgetListItemDTO {
+  id: string;
+  startDate: string;
+  name: string;
+  endDate: string;
+  currency: string;
+  totalIncomes: number;
+  totalExpenses: number;
+  availableMoney: number;
+  percentageUsed: number;
+  daysRemaining: number;
+  // Sin incluir los arrays de incomes/expenses (más liviano para listados)
+}
+
+export interface UpdateBudgetFullDTO {
+  startDate?: string;
+  endDate?: string;
+  currency?: string;
+  incomes: IncomeDTO[];
+  expenses: ExpenseDTO[];
+}

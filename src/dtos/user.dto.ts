@@ -1,4 +1,4 @@
-import { CategoryDTO } from "./category.dto";
+import { CategoryDTO } from './category.dto';
 
 export interface UserDTO {
   id: string;

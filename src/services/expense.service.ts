@@ -3,12 +3,11 @@ import { $Enums, Expense, PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export class ExpenseService {
-
   // Crear gasto
   async createExpense(data: {
     budgetId: string;
     categoryId: string;
-    concept:string;
+    concept: string;
     amount: number;
     status: $Enums.ExpenseStatus;
   }): Promise<Expense> {
@@ -18,15 +17,15 @@ export class ExpenseService {
         concept: data.concept,
         status: data.status,
         budgetId: data.budgetId,
-        categoryId: data.categoryId
-      }
+        categoryId: data.categoryId,
+      },
     });
   }
 
   // Obtener gasto por ID
   async getExpenseById(id: string): Promise<Expense | null> {
     return await prisma.expense.findUnique({
-      where: { id }
+      where: { id },
     });
   }
 
@@ -34,32 +33,34 @@ export class ExpenseService {
   async getAllExpenses(data: { budgetId: string }): Promise<Expense[]> {
     return await prisma.expense.findMany({
       where: { budgetId: data.budgetId },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     });
   }
 
-  async updateExpense(id: string, data: {
-    categoryId?: string;
-    concept?: string;
-    amount?: number;
-    status?: $Enums.ExpenseStatus;
-  }): Promise<Expense> {
+  async updateExpense(
+    id: string,
+    data: {
+      categoryId?: string;
+      concept?: string;
+      amount?: number;
+      status?: $Enums.ExpenseStatus;
+    }
+  ): Promise<Expense> {
     return await prisma.expense.update({
       where: { id },
       data: {
         categoryId: data.categoryId,
         concept: data.concept,
         amount: data.amount,
-        status: data.status
-      }
+        status: data.status,
+      },
     });
   }
 
   // Eliminar gasto
   async deleteExpense(id: string): Promise<Expense> {
     return await prisma.expense.delete({
-      where: { id }
+      where: { id },
     });
   }
-
 }

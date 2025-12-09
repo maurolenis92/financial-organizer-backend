@@ -3,36 +3,32 @@ import { PrismaClient, Income } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export class IncomeService {
-
-  async createIncome(data: {
-    amount: number;
-    concept: string;
-    budgetId: string;
-  }): Promise<Income> {
+  async createIncome(data: { amount: number; concept: string; budgetId: string }): Promise<Income> {
     return await prisma.income.create({
       data: {
         amount: data.amount,
         concept: data.concept,
-        budgetId: data.budgetId
-      }
+        budgetId: data.budgetId,
+      },
     });
   }
-
 
   async getIncomesByBudget(budgetId: string): Promise<Income[]> {
     return await prisma.income.findMany({
       where: { budgetId },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     });
   }
 
-
-  async updateIncome(id: string, data: {
-    amount?: number;
-    concept?: string;
-  }): Promise<Income | null> {
+  async updateIncome(
+    id: string,
+    data: {
+      amount?: number;
+      concept?: string;
+    }
+  ): Promise<Income | null> {
     const existingIncome = await prisma.income.findUnique({
-      where: { id }
+      where: { id },
     });
 
     if (!existingIncome) {
@@ -43,14 +39,14 @@ export class IncomeService {
       where: { id },
       data: {
         amount: data.amount ?? existingIncome.amount,
-        concept: data.concept ?? existingIncome.concept
-      }
+        concept: data.concept ?? existingIncome.concept,
+      },
     });
   }
 
   async deleteIncome(id: string): Promise<Income | null> {
     const existingIncome = await prisma.income.findUnique({
-      where: { id }
+      where: { id },
     });
 
     if (!existingIncome) {
@@ -58,7 +54,7 @@ export class IncomeService {
     }
 
     return await prisma.income.delete({
-      where: { id }
+      where: { id },
     });
-  } 
+  }
 }

@@ -2,9 +2,9 @@
 // INPUT DTOs (lo que RECIBES del cliente)
 // ============================================
 
-import { CategoryDTO } from "./category.dto";
-import { ExpenseDTO } from "./expense.dto";
-import { IncomeDTO } from "./income.dto";
+import { CategoryDTO } from './category.dto';
+import { ExpenseDTO } from './expense.dto';
+import { IncomeDTO } from './income.dto';
 
 export interface CreateBudgetDTO {
   startDate: string;
@@ -31,15 +31,15 @@ export interface BudgetResponseDTO {
   endDate: string;
   currency: string;
   totalPaidExpenses: number; // Suma de gastos con estado 'PAID'
-  totalIncomes: number;       // Suma de todos los ingresos
-  totalExpenses: number;        // Suma de todos los gastos
-  availableMoney: number;       // Calculado: totalIncomes - totalExpenses
-  percentageUsed: number;      // Calculado: (totalExpenses / totalIncomes) * 100
-  daysRemaining: number;        // Calculado: días entre hoy y endDate
-  incomesCount: number;         // Calculado: cantidad de ingresos
-  expensesCount: number;        // Calculado: cantidad de gastos
-  expenses?: ExpenseDTO[];     // Lista de gastos asociados al presupuesto
-  incomes?: IncomeDTO[];       // Lista de ingresos asociados al presupuesto
+  totalIncomes: number; // Suma de todos los ingresos
+  totalExpenses: number; // Suma de todos los gastos
+  availableMoney: number; // Calculado: totalIncomes - totalExpenses
+  percentageUsed: number; // Calculado: (totalExpenses / totalIncomes) * 100
+  daysRemaining: number; // Calculado: días entre hoy y endDate
+  incomesCount: number; // Calculado: cantidad de ingresos
+  expensesCount: number; // Calculado: cantidad de gastos
+  expenses?: ExpenseDTO[]; // Lista de gastos asociados al presupuesto
+  incomes?: IncomeDTO[]; // Lista de ingresos asociados al presupuesto
   categories?: CategoryDTO[]; // Lista de categorías asociadas al presupuesto
 }
 

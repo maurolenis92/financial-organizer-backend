@@ -6,7 +6,7 @@ import { UserService } from '../services/user.service';
 // Extend Express Request to include user info
 export interface AuthenticatedRequest extends Request {
   cognitoUser?: {
-    sub: string;          // Cognito user ID
+    sub: string; // Cognito user ID
     email: string;
     name?: string;
     tokenUse: string;
@@ -17,7 +17,7 @@ export interface AuthenticatedRequest extends Request {
 // Create JWT verifier for Cognito
 const verifier = CognitoJwtVerifier.create({
   userPoolId: process.env.COGNITO_USER_POOL_ID!,
-  tokenUse: 'id',  // Use 'id' token (contains user attributes)
+  tokenUse: 'id', // Use 'id' token (contains user attributes)
   clientId: process.env.COGNITO_CLIENT_ID!,
 });
 
@@ -86,7 +86,7 @@ export const authMiddleware = async (
     next();
   } catch (error) {
     console.error('Auth middleware error:', error);
-    
+
     res.status(401).json({
       error: 'Unauthorized',
       message: 'Invalid or expired token',
@@ -108,10 +108,10 @@ export const optionalAuthMiddleware = async (
 
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.split(' ')[1];
-      
+
       if (token) {
         const payload = await verifier.verify(token);
-        
+
         req.cognitoUser = {
           sub: payload.sub,
           email: payload.email as string,

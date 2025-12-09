@@ -5,10 +5,10 @@ export class AppError extends Error {
 
   constructor(message: string, statusCode: number = 500, isOperational: boolean = true) {
     super(message);
-    
+
     this.statusCode = statusCode;
     this.isOperational = isOperational;
-    
+
     // Mantener el stack trace correcto
     Error.captureStackTrace(this, this.constructor);
   }

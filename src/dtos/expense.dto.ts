@@ -1,7 +1,6 @@
-import { Category } from "@prisma/client";
-import { CategoryDTO } from "./category.dto";
-import { KeyValueDTO } from "./key-value.dto";
-
+import { Category } from '@prisma/client';
+import { CategoryDTO } from './category.dto';
+import { KeyValueDTO } from './key-value.dto';
 
 export interface ExpenseDTO {
   id: string;
@@ -13,6 +12,5 @@ export interface ExpenseDTO {
 
 export interface CreateExpenseDTO extends Pick<ExpenseDTO, 'id' | 'amount' | 'concept'> {
   category: CategoryDTO;
-  status: KeyValueDTO
+  status: KeyValueDTO;
 }
-

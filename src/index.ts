@@ -27,10 +27,10 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 
 // Configurar CORS según entorno
 const corsOptions = {
-  origin: isDevelopment 
-    ? 'http://localhost:4200'  // Desarrollo: solo Angular local
-    : process.env.FRONTEND_URL,  // Producción: dominio real
-  credentials: true
+  origin: isDevelopment
+    ? 'http://localhost:4200' // Desarrollo: solo Angular local
+    : process.env.FRONTEND_URL, // Producción: dominio real
+  credentials: true,
 };
 
 // Middlewares
@@ -43,30 +43,30 @@ console.log(`🔐 CORS configurado para: ${corsOptions.origin}`);
 
 // Ruta de prueba
 app.get('/', (req: Request, res: Response) => {
-  res.json({ 
+  res.json({
     message: '🎉 FinanSmart API funcionando!',
     version: '1.0.0',
-    environment: isDevelopment ? 'development' : 'production'
+    environment: isDevelopment ? 'development' : 'production',
   });
 });
 
-// Health check 
+// Health check
 app.get('/health', async (req: Request, res: Response) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
-    
-    res.json({ 
-      status: 'OK', 
+
+    res.json({
+      status: 'OK',
       timestamp: new Date().toISOString(),
       database: 'connected',
-      environment: isDevelopment ? 'development' : 'production'
+      environment: isDevelopment ? 'development' : 'production',
     });
   } catch (error) {
-    res.status(503).json({ 
-      status: 'ERROR', 
+    res.status(503).json({
+      status: 'ERROR',
       timestamp: new Date().toISOString(),
       database: 'disconnected',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'Unknown error',
     });
   }
 });

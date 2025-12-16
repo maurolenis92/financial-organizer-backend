@@ -215,7 +215,10 @@ export class BudgetService {
           amount: Number(income.amount),
           ...(isExpense && {
             categoryId: (income as CreateExpenseDTO).category.id,
-            status: (income as CreateExpenseDTO).status.value,
+            status:
+              typeof (income as CreateExpenseDTO).status === 'string'
+                ? (income as CreateExpenseDTO).status
+                : (income as CreateExpenseDTO).status.value,
           }),
         },
       });

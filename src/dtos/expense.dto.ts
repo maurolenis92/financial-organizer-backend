@@ -7,6 +7,7 @@ export interface ExpenseDTO {
   amount: number;
   concept: string;
   categoryId: string;
+  category: CategoryDTO;
   status: 'PENDING' | 'PAID';
 }
 

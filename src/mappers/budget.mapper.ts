@@ -1,5 +1,6 @@
 import { Budget, Category, Expense, Income } from '@prisma/client';
 import { BudgetListItemDTO, BudgetResponseDTO } from '../dtos/budget.dto';
+import { ExpenseDTO } from '../dtos/expense.dto';
 
 export class BudgetMapper {
   // Convierte Budget de BD a BudgetListItemDTO
@@ -64,6 +65,7 @@ export class BudgetMapper {
         amount: expense.amount,
         concept: expense.concept,
         categoryId: expense.categoryId,
+        category: (expense as any).category,
         status: expense.status,
       })),
       incomes: budget.incomes.map((income) => ({

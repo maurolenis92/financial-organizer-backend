@@ -171,6 +171,14 @@ export class BudgetService {
     });
   }
 
+  private deleteValues = async (model: any, ids: string[]) => {
+    if (ids.length) {
+      await model.deleteMany({
+        where: { id: { in: ids } },
+      });
+    }
+  };
+
   // Sincronizar incomes (create, update, delete)
   private async syncValues(
     model: any,
@@ -185,6 +193,11 @@ export class BudgetService {
       select: { id: true },
     });
     const existingIds = existingValues.map((i: any) => i.id);
+
+    const itemsDeleted = existingIds.filter((id: string) => !values.find((v) => v.id === id));
+
+    // Eliminar items que no vienen en el request
+    await this.deleteValues(model, itemsDeleted);
 
     if (isExpense) {
       for (const val of values as CreateExpenseDTO[]) {
@@ -233,7 +246,10 @@ export class BudgetService {
           amount: Number(i.amount),
           ...(isExpense && {
             categoryId: (i as CreateExpenseDTO).category.id,
-            status: (i as CreateExpenseDTO).status.value || 'PENDING',
+            status:
+              typeof (i as CreateExpenseDTO).status === 'string'
+                ? (i as CreateExpenseDTO).status
+                : (i as CreateExpenseDTO).status.value,
           }),
         })),
       });

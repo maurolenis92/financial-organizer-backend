@@ -6,6 +6,7 @@ import userRoutes from './routes/user.routes';
 import categoryRoutes from './routes/category.routes';
 import incomeRoutes from './routes/income.routes';
 import expenseRoutes from './routes/expense.routes';
+import dashboardRoutes from './routes/dashboard.routes';
 import { errorHandler } from './middleware/error-handler.middleware';
 import { PrismaClient } from '@prisma/client';
 import { authMiddleware } from './middleware/auth.middleware';
@@ -80,6 +81,7 @@ app.use('/api', userRoutes);
 app.use('/api', categoryRoutes);
 app.use('/api', incomeRoutes);
 app.use('/api', expenseRoutes);
+app.use('/api', dashboardRoutes);
 
 // Middleware global para manejo de errores
 app.use(errorHandler);

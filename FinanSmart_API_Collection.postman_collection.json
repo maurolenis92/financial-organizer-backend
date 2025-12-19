@@ -521,6 +521,112 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "📊 Dashboard",
+      "item": [
+        {
+          "name": "Get Dashboard Summary",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.test('Dashboard summary retrieved successfully', function () {",
+                  "        pm.expect(response.period).to.not.be.undefined;",
+                  "        pm.expect(response.summary).to.not.be.undefined;",
+                  "        pm.expect(response.expensesByCategory).to.be.an('array');",
+                  "        pm.expect(response.monthlyTrend).to.be.an('array');",
+                  "        pm.expect(response.activeBudgets).to.be.an('array');",
+                  "        pm.expect(response.recentTransactions).to.be.an('array');",
+                  "        pm.expect(response.alerts).to.be.an('array');",
+                  "    });",
+                  "    ",
+                  "    pm.test('Summary has required fields', function () {",
+                  "        pm.expect(response.summary.totalIncome).to.not.be.undefined;",
+                  "        pm.expect(response.summary.totalExpenses).to.not.be.undefined;",
+                  "        pm.expect(response.summary.available).to.not.be.undefined;",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/summary?month=12&year=2025",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dashboard", "summary"],
+              "query": [
+                {
+                  "key": "month",
+                  "value": "12",
+                  "description": "Mes a consultar (1-12). Si se omite, usa el mes actual"
+                },
+                {
+                  "key": "year",
+                  "value": "2025",
+                  "description": "Año a consultar. Si se omite, usa el año actual"
+                }
+              ]
+            },
+            "description": "Obtiene el resumen completo del dashboard para un mes y año específico.\n\n**Datos incluidos:**\n- Resumen financiero (ingresos, gastos, disponible, cambios %)\n- Gastos por categoría con porcentajes\n- Tendencia mensual de últimos 6 meses\n- Presupuestos activos, planificados y completados\n- Últimas 5 transacciones\n- Alertas y notificaciones\n\n**Parámetros opcionales:**\n- `month`: Mes (1-12) - Default: mes actual\n- `year`: Año - Default: año actual"
+          },
+          "response": [
+            {
+              "name": "Dashboard Summary Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/dashboard/summary?month=12&year=2025",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "dashboard", "summary"],
+                  "query": [
+                    {
+                      "key": "month",
+                      "value": "12"
+                    },
+                    {
+                      "key": "year",
+                      "value": "2025"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"period\": {\n    \"month\": 12,\n    \"year\": 2025\n  },\n  \"summary\": {\n    \"totalIncome\": 9915912,\n    \"totalIncomeChange\": 15,\n    \"totalExpenses\": 3558412,\n    \"totalExpensesChange\": -8,\n    \"available\": 6357500\n  },\n  \"expensesByCategory\": [\n    {\n      \"categoryId\": \"cat-001\",\n      \"categoryName\": \"Arriendo\",\n      \"categoryColor\": \"#3B82F6\",\n      \"categoryIcon\": \"home\",\n      \"total\": 640000,\n      \"percentage\": 18,\n      \"count\": 1\n    },\n    {\n      \"categoryId\": \"cat-002\",\n      \"categoryName\": \"Comida\",\n      \"categoryColor\": \"#10B981\",\n      \"categoryIcon\": \"restaurant\",\n      \"total\": 498000,\n      \"percentage\": 10,\n      \"count\": 15\n    }\n  ],\n  \"monthlyTrend\": [\n    { \"month\": \"Jul\", \"year\": 2025, \"amount\": 2100000 },\n    { \"month\": \"Ago\", \"year\": 2025, \"amount\": 2500000 },\n    { \"month\": \"Sep\", \"year\": 2025, \"amount\": 2800000 },\n    { \"month\": \"Oct\", \"year\": 2025, \"amount\": 3200000 },\n    { \"month\": \"Nov\", \"year\": 2025, \"amount\": 3800000 },\n    { \"month\": \"Dic\", \"year\": 2025, \"amount\": 3558412 }\n  ],\n  \"activeBudgets\": [\n    {\n      \"id\": \"budget-001\",\n      \"name\": \"DICIEMBRE\",\n      \"status\": \"ACTIVO\",\n      \"startDate\": \"2025-12-01T00:00:00.000Z\",\n      \"endDate\": \"2025-12-31T23:59:59.000Z\",\n      \"totalIncome\": 3558412,\n      \"totalExpenses\": 604930,\n      \"percentageUsed\": 17,\n      \"daysRemaining\": 15\n    }\n  ],\n  \"recentTransactions\": [\n    {\n      \"id\": \"trans-001\",\n      \"type\": \"expense\",\n      \"category\": \"Arriendo\",\n      \"categoryIcon\": \"home\",\n      \"amount\": -640000,\n      \"status\": \"Pendiente\",\n      \"createdAt\": \"2025-12-17T10:00:00.000Z\",\n      \"timeAgo\": \"Hace 2h\"\n    },\n    {\n      \"id\": \"trans-002\",\n      \"type\": \"income\",\n      \"category\": \"Salario\",\n      \"categoryIcon\": null,\n      \"amount\": 3800000,\n      \"status\": \"Completado\",\n      \"createdAt\": \"2025-12-02T00:00:00.000Z\",\n      \"timeAgo\": \"Hace 15d\"\n    }\n  ],\n  \"alerts\": [\n    {\n      \"type\": \"warning\",\n      \"severity\": \"medium\",\n      \"title\": \"Presupuesto 'Mes diciembre' al 48%\",\n      \"message\": \"Has consumido 48% de tu presupuesto\",\n      \"budgetId\": \"budget-001\"\n    },\n    {\n      \"type\": \"info\",\n      \"severity\": \"low\",\n      \"title\": \"Gastos pendientes de $640,000\",\n      \"message\": \"Tienes 2 facturas marcadas como pendientes de pago\",\n      \"budgetId\": \"budget-001\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Dashboard Current Month",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/summary",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dashboard", "summary"]
+            },
+            "description": "Obtiene el dashboard del mes actual sin especificar parámetros"
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "event": [

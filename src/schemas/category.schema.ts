@@ -1,9 +1,6 @@
 import { z } from 'zod';
 
 export const createCategorySchema = z.object({
-  userId: z.uuid({
-    message: 'userId debe ser un UUID válido',
-  }),
   name: z.string().min(1, 'Nombre es requerido').max(100),
   color: z
     .string()

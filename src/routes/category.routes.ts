@@ -13,9 +13,7 @@ router.post('/category', validate(createCategorySchema), (req, res, next) =>
 router.get('/category/user/:userId', (req, res, next) =>
   categoriesController.getByUser(req, res, next)
 );
-router.delete('/category/:id/user/:userId', (req, res, next) =>
-  categoriesController.delete(req, res, next)
-);
+router.delete('/category/:id', (req, res, next) => categoriesController.delete(req, res, next));
 router.put('/category/:id/user/:userId', validate(updateCategorySchema), (req, res, next) =>
   categoriesController.update(req, res, next)
 );

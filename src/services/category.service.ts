@@ -13,6 +13,8 @@ export class CategoryService {
       data: {
         name: data.name,
         userId: data.userId,
+        color: data.color,
+        icon: data.icon,
       },
     });
   }
